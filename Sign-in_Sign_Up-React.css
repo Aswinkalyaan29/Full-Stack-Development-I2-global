@@ -1,0 +1,63 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import '../styles/auth.css';
+
+const SignInPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post('http://localhost:8000/login', { user_email: email, password });
+      navigate('/');
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+  };
+
+  return (
+    <motion.div className="auth-container" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <h2>Sign In</h2>
+      <form onSubmit={handleSignIn}>
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <button type="submit">Sign In</button>
+      </form>
+    </motion.div>
+  );
+};
+
+const SignUpPage = () => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post('http://localhost:8000/signup', { user_name: username, user_email: email, password });
+      navigate('/signin');
+    } catch (error) {
+      console.error('Signup failed:', error);
+    }
+  };
+
+  return (
+    <motion.div className="auth-container" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <h2>Sign Up</h2>
+      <form onSubmit={handleSignUp}>
+        <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <button type="submit">Sign Up</button>
+      </form>
+    </motion.div>
+  );
+};
+
+export { SignInPage, SignUpPage };
